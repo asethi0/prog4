@@ -25,6 +25,5 @@ typedef struct dir_tree_node {
 		char devminor[8];
 		char prefix[155];
 	}
-	struct dir_tree_node **children;
 	FILE* file;
 } dir_node;
