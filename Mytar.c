@@ -5,17 +5,17 @@
 #include <unistd.h>
 #include <pwd.h>
 #include <grp.h>
-char* get_typeflag(char* name)
+char get_typeflag(char* name)
 {
 	char* retVal;
 	struct stat file_stat;
 	stat(name, &file_stat);
 	if(S_ISREG(file_stat.st_mode))
-		retVal = "0";
+		retVal = '0';
 	else if(S_ISLNK(file_stat.st_mode))
-		retVal = "2";
+		retVal = '2';
 	else if(S_ISDIR(file_stat.st_mode))
-		retVal = "5";
+		retVal = '5';
 	/*need to   do  test case for regular file(alternate)*/
 	return retVal;	
 }
@@ -42,15 +42,13 @@ char get_type_from_flag(dir_tree_node* node)
 }
 
 
-file* add_file(struct* dirent dir)
+void add_file(char *name)
 {
-	ino_t inode = dir.d_ino;
-	char* name = dir.d_name;
 	
 	struct stat file_info;
-	lstat(dir->d_name,&file_info);
+	lstat(name, &file_info);
 	
-	struct file* header = malloc(sizeof(file));
+	dir_node header = malloc(sizeof(dir_node));
 	if(header == NULL)
 	{
 		perror("malloc failed");
@@ -87,6 +85,56 @@ file* add_file(struct* dirent dir)
 	return header;
 }	
 
-void addNode(file* file, file* parent)
-{
+
+
+void add_dir(char *pathname) {
+	dir_node *node = malloc(sizeof(dir_node));
+ 	DIR *dir_stream = opendir(pathname);
+ 	struct stat stat_buff;
+	struct dirent entry;
+
+
+	node->name = pathname;
+
+	getcwd(node->prefix, 155);
+
+	entry = readdir(dir_stream);
+	lstat(entry.d_name, &stat_buff);
+
+	node->mode = (char *)stat_buff.st.mode;
+	node->uid = (char *)stat_buff.st_uid;
+	node->gid = (char *)stat_buff.st_gid;
+	node->size = "000000000000";
+	node->mtime = (char *)stat_buff.st_mtime;
+	node->typeflag = get_typeflag(pathname);
+	node->linkname = {0};
+	node->magic = "ustar\0";
+	node->version = "00";
+	struct group* grp;
+	struct passwd* pwd;
+	grp = getgrgid(gid);
+	pwd = getpwuid(uid); 
+	node->uname = pwd->pw_name;
+	node->gname = grp->gr_name;
+	node->devmajor ="00000000";
+	node->devminor = "00000000";
+
+	while(entry = readdir(dir_stream)) {
+		if (entry.d_name != "..") {
+			add_entry(entry.d_name);
+		}
+	}
+
+	/*add_to_archive(entry)*/
 }
+
+void add_entry(char *name) {
+	char flag = get_typeflag(entry->d_name);
+	if (flag = '0' || flag = '2') {
+		add_file(name);
+	}
+	else {
+		add_dir(name);
+	}
+}
+
