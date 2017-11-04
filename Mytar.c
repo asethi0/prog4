@@ -86,6 +86,58 @@ void add_file(struct* dirent dir)
 
 }	
 
+void add_dir(char *pathname) {
+        dir_node *node = malloc(sizeof(dir_node));
+        DIR *dir_stream = opendir(pathname);
+        struct stat stat_buff;
+        struct dirent entry;
+
+
+        node->name = pathname;
+
+        getcwd(node->prefix, 155);
+
+        entry = readdir(dir_stream);
+        lstat(entry.d_name, &stat_buff);
+
+        node->mode = (char *)stat_buff.st.mode;
+        node->uid = (char *)stat_buff.st_uid;
+        node->gid = (char *)stat_buff.st_gid;
+        node->size = "000000000000";
+        node->mtime = (char *)stat_buff.st_mtime;
+        node->typeflag = get_typeflag(pathname);
+        node->linkname = {0};
+        node->magic = "ustar\0";
+        node->version = "00";
+        struct group* grp;
+        struct passwd* pwd;
+        grp = getgrgid(gid);
+        pwd = getpwuid(uid);
+        node->uname = pwd->pw_name;
+        node->gname = grp->gr_name;
+        node->devmajor ="00000000";
+        node->devminor = "00000000";
+/*added a check for the curretn direcotry (.)*/
+        while(entry = readdir(dir_stream)) {
+                if (entry.d_name != ".."|| entry.d_name!= "." ) {
+                        add_entry(entry.d_name);
+                }
+        }
+
+}
+
+
+void add_entry(char *name) 
+{
+        char flag = get_typeflag(entry->d_name);
+        if (flag = '0' || flag = '2') {
+                add_file(name);
+        }
+        else {
+                add_dir(name);
+        }
+}
+
 
 void addNode(file* file, file* parent)
 {
