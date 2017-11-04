@@ -26,4 +26,5 @@ typedef struct dir_tree_node {
 		char prefix[155];
 	}
 	struct dir_tree_node **children;
+
 } dir_node;
