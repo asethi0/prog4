@@ -7,7 +7,7 @@
 #include <grp.h>
 char get_typeflag(char* name)
 {
-	char* retVal;
+	char retVal;
 	struct stat file_stat;
 	stat(name, &file_stat);
 	if(S_ISREG(file_stat.st_mode))
@@ -24,7 +24,7 @@ char get_type_from_flag(dir_tree_node* node)
 {
 	char retVal;
 	char flag = node->data->typeflag;
-	if(flag =='0' || '\0')
+	if(flag =='0' ||flag == '\0')
 	{
 		retVal = 'f';
 	}
@@ -42,7 +42,11 @@ char get_type_from_flag(dir_tree_node* node)
 }
 
 
+<<<<<<< HEAD
 void add_file(char *name)
+=======
+void add_file(struct* dirent dir)
+>>>>>>> 6e4b46a62c619df1d8e33fd7ad1950076c892f50
 {
 	
 	struct stat file_info;
@@ -79,6 +83,7 @@ void add_file(char *name)
 	header->gname = grp->gr_name;
 	header->devmajor ="00000000";
 	header->devminor = "00000000";
+
 	/*prefix is not assigned a value because it must store relative path
  * 	this needs to be updated in the add directotry method*/
 
@@ -86,6 +91,7 @@ void add_file(char *name)
 }	
 
 
+<<<<<<< HEAD
 
 void add_dir(char *pathname) {
 	dir_node *node = malloc(sizeof(dir_node));
@@ -138,3 +144,23 @@ void add_entry(char *name) {
 	}
 }
 
+=======
+void addNode(file* file, file* parent)
+{
+}
+/*returns 1 if it exists*/
+int file_exists(char* filename)
+{
+	struct stat file;
+	return (stat(filename, &file) == 0);
+}
+
+FILE* create_archive(char* name)
+{
+	FILE *fp;
+	fp = fopen(name, "w+")
+	return fp;
+}
+
+	
+>>>>>>> 6e4b46a62c619df1d8e33fd7ad1950076c892f50
