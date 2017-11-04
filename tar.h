@@ -1,17 +1,30 @@
-typedef file
-{
-	char name[100];
-	int mode;
-	int uid;
-	int gid;
-	off_t size;
-	long mtime;
-	int chksum;
-	int typeflag;
-	char lname[100];
-	int version;
-	char uname[32];
-	char gname[32]
-	char* devmajor;
-	char prefix[155];
-};	
+#include <dirent.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <string.h>
+#include <limits.h>
+
+typedef struct dir_tree_node {
+	struct data {
+		char name[100];
+		char mode[8];
+		char uid[8];
+		char gid[8];
+		char size[12];
+		char mtime[12];
+		char chksum[8];
+		char typeflag;
+		char linkname[100];
+		char magic[6];
+		char version[2];
+		char uname[32];
+		char gname[32];
+		char devmajor[8];
+		char devminor[8];
+		char prefix[155];
+	}
+	struct dir_tree_node **children;
+	FILE* file;
+} dir_node;
