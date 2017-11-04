@@ -67,7 +67,10 @@ void add_file(struct* dirent dir)
 	/*finding out if file is of type symlink
  * 	if it is,lname will be set to value of link  */
 	if(strcmp(get_typeflag(name),"2") == 0) 
-		header->lname =     	
+	{
+		ssize_t len;
+		len = readlink(name, header->linkname, sizeof(header->linkname) -1);
+		header->linkname[len] = '\0';	
 	header->version = malloc(sizof(char) *2);
 	header->version = "00";
 
