@@ -25,5 +25,4 @@ typedef struct dir_tree_node {
 		char devminor[8];
 		char prefix[155];
 	}
-	FILE* file;
 } dir_node;
