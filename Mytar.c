@@ -5,17 +5,17 @@
 #include <unistd.h>
 #include <pwd.h>
 #include <grp.h>
-char* get_typeflag(char* name)
+char get_typeflag(char* name)
 {
-	char* retVal;
+	char retVal;
 	struct stat file_stat;
 	stat(name, &file_stat);
 	if(S_ISREG(file_stat.st_mode))
-		retVal = "0";
+		retVal = '0';
 	else if(S_ISLNK(file_stat.st_mode))
-		retVal = "2";
+		retVal = '2';
 	else if(S_ISDIR(file_stat.st_mode))
-		retVal = "5";
+		retVal = '5';
 	/*need to   do  test case for regular file(alternate)*/
 	return retVal;	
 }
@@ -24,7 +24,7 @@ char get_type_from_flag(dir_tree_node* node)
 {
 	char retVal;
 	char flag = node->data->typeflag;
-	if(flag =='0' || '\0')
+	if(flag =='0' ||flag == '\0')
 	{
 		retVal = 'f';
 	}
@@ -42,7 +42,7 @@ char get_type_from_flag(dir_tree_node* node)
 }
 
 
-file* add_file(struct* dirent dir)
+void add_file(struct* dirent dir)
 {
 	ino_t inode = dir.d_ino;
 	char* name = dir.d_name;
@@ -81,12 +81,29 @@ file* add_file(struct* dirent dir)
 	header->gname = grp->gr_name;
 	header->devmajor ="00000000";
 	header->devminor = "00000000";
+
 	/*prefix is not assigned a value because it must store relative path
  * 	this needs to be updated in the add directotry method*/
 
 	return header;
 }	
 
+
 void addNode(file* file, file* parent)
 {
 }
+/*returns 1 if it exists*/
+int file_exists(char* filename)
+{
+	struct stat file;
+	return (stat(filename, &file) == 0);
+}
+
+FILE* create_archive(char* name)
+{
+	FILE *fp;
+	fp = fopen(name, "w+")
+	return fp;
+}
+
+	
