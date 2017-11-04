@@ -139,9 +139,6 @@ void add_entry(char *name)
 }
 
 
-void addNode(file* file, file* parent)
-{
-}
 /*returns 1 if it exists*/
 int file_exists(char* filename)
 {
