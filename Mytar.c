@@ -62,7 +62,6 @@ void add_file(struct* dirent dir)
 	header->gid = file_info.st_gid;
 	header->size = file_info.st_size;
 	header->mtime = file_info.mtime; 
-	header->chksum =
 	header->typeflag = get_typeflag(name);
 	
 	/*finding out if file is of type symlink
@@ -85,7 +84,6 @@ void add_file(struct* dirent dir)
 	/*prefix is not assigned a value because it must store relative path
  * 	this needs to be updated in the add directotry method*/
 
-	return header;
 }	
 
 
