@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <pwd.h>
 #include <grp.h>
+#include <stdlib.h>
 char get_typeflag(char* name)
 {
 	char retVal;
@@ -20,10 +21,10 @@ char get_typeflag(char* name)
 	return retVal;	
 }
 
-char get_type_from_flag(dir_tree_node* node)
+char get_type_from_flag(dir_node* node)
 {
 	char retVal;
-	char flag = node->data->typeflag;
+	char flag = node->typeflag;
 	if(flag =='0' ||flag == '\0')
 	{
 		retVal = 'f';
@@ -149,11 +150,11 @@ int file_exists(char* filename)
 	return (stat(filename, &file) == 0);
 }
 
-FILE* create_archive(char* name)
+void create_archive(char* name)
 {
 	FILE *fp;
 	fp = fopen(name, "w+")
-	return fp;
+	fclose(fp);
 }
 
 	
