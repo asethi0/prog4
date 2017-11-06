@@ -53,11 +53,31 @@ void write_dir(char* dirName, char* writeFile)
 	}
 
 	struct dirent* dp;
+	struct stat info;
+
 	char fname[500];
 	while((dp = readdir(dir)) != NULL)
 	{
 		struct stat file;
-		fname = 		
+		fname = dp->d_name;
+		lstat(fname, &info);
+		if(S_ISREG(file.st_mode))
+		{
+			add_file(dp);/*makes the header*/
+			write_file(fname, writeFile);
+		}
+
+		if(S_ISDIR9file.st_mode)
+		{
+			add_dir(fname);
+			chdir(fname);
+			write_dir(fname, writeFile);
+			chdir("..");
+		}
+	}
+}		
+
+					
 
 	
 		
