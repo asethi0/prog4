@@ -47,49 +47,42 @@ void add_file(struct* dirent dir)
 {
 	ino_t inode = dir.d_ino;
 	char* name = dir.d_name;
-	
 	struct stat file_info;
 	lstat(dir->d_name,&file_info);
-	
-	struct file* header = malloc(sizeof(file));
+	struct dir_node* header = malloc(sizeof(dir_node));
 	if(header == NULL)
 	{
 		perror("malloc failed");
 		exit(1);
 	}
 	strcpy(header->name, name);
-	header->mode = file_info.st_mode;
-	header->uid = file_info.st_uid;
-	header->gid = file_info.st_gid;
-	header->size = file_info.st_size;
-	header->mtime = file_info.mtime; 
-	header->typeflag = get_typeflag(name);
+	strcpy(header->mode, file_info.st_mode);
+	strcpy(header->uid, file_info.st_uid);
+	strcpy(header->gid, file_info.st_gid);
+	strcpy(header->size, file_info.st_size);
+	strcpy(header->mtime, file_info.mtime); 
+	strcpy(header->typeflag, get_typeflag(name));
 	
-	/*finding out if file is of type symlink
- * 	if it is,lname will be set to value of link  */
 	if(strcmp(get_typeflag(name),"2") == 0) 
 	{
 		ssize_t len;
 		len = readlink(name, header->linkname, sizeof(header->linkname) -1);
 		header->linkname[len] = '\0';	
+	}		
 	header->version = malloc(sizof(char) *2);
 	header->version = "00";
 
-	/*for uname and gname*/
+/*	for uname and gname */
 	struct group* grp;
 	struct passwd* pwd;
 	grp = getgrgid(gid);
 	pwd = getpwuid(uid); 
-	header->uname = pwd->pw_name;
-	header->gname = grp->gr_name;
+	strcpy(header->uname, pwd->pw_name);
+	strcpy(header->gname, grp->gr_name);
 	header->devmajor ="00000000";
 	header->devminor = "00000000";
-
-	/*prefix is not assigned a value because it must store relative path
- * 	this needs to be updated in the add directotry method*/
-
 }	
-
+/*
 void add_dir(char *pathname) {
         dir_node *node = malloc(sizeof(dir_node));
         DIR *dir_stream = opendir(pathname);
@@ -104,7 +97,7 @@ void add_dir(char *pathname) {
         entry = readdir(dir_stream);
         lstat(entry.d_name, &stat_buff);
 
-        node->mode = (char *)stat_buff.st.mode;
+        node->mode= (char *)stat_buff.st.mode;
         node->uid = (char *)stat_buff.st_uid;
         node->gid = (char *)stat_buff.st_gid;
         node->size = "000000000000";
@@ -122,19 +115,19 @@ void add_dir(char *pathname) {
         node->devmajor ="00000000";
         node->devminor = "00000000";
 /*added a check for the curretn direcotry (.)*/
-        while(entry = readdir(dir_stream)) {
+  /*      while(entry = readdir(dir_stream)) {
                 if (entry.d_name != ".."|| entry.d_name!= "." ) {
                         add_entry(entry.d_name);
                 }
         }
 
-}
+}*/
 
 
 void add_entry(char *name) 
 {
-        char flag = get_typeflag(entry->d_name);
-        if (flag = '0' || flag = '2') {
+        char flag = get_typeflag(name);
+        if (flag == '0' || flag == '2') {
                 add_file(name);
         }
         else {
@@ -153,7 +146,7 @@ int file_exists(char* filename)
 void create_archive(char* name)
 {
 	FILE *fp;
-	fp = fopen(name, "w+")
+	fp = fopen(name, "w+");
 	fclose(fp);
 }
 
